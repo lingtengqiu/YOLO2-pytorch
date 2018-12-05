@@ -29,7 +29,7 @@ and the [paper](https://arxiv.org/abs/1612.08242):
 训练自己的yolov2
 这里你需要构建一个软连接到你下载的训练集，这里以voc2012 为例子进入data 文件夹  
 
-ln -s [源文件目录] VOCdevkit2012 以下给你提供了一些voc 的数据集
+ln -s [源文件目录] VOCdevkit2012 以下给你提供了一些voc 的数据集  
     ```bash
     wget http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCtrainval_06-Nov-2007.tar
     wget http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCtest_06-Nov-2007.tar
