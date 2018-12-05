@@ -14,108 +14,43 @@ For details about YOLO and YOLOv2 please refer to their [project page](https://p
 and the [paper](https://arxiv.org/abs/1612.08242):
 *YOLO9000: Better, Faster, Stronger by Joseph Redmon and Ali Farhadi*.
 
-**NOTE 1:**
-This is still an experimental project.
-VOC07 test mAP is about 0.71 (trained on VOC07+12 trainval,
-reported by [@cory8249](https://github.com/longcw/yolo2-pytorch/issues/23)).
-See [issue1](https://github.com/longcw/yolo2-pytorch/issues/1) 
-and [issue23](https://github.com/longcw/yolo2-pytorch/issues/23)
-for more details about training.
-
-**NOTE 2:**
-I recommend to write your own dataloader using [torch.utils.data.Dataset](http://pytorch.org/docs/data.html)
-since `multiprocessing.Pool.imap` won't stop even there is no enough memory space. 
-An example of `dataloader` for VOCDataset: [issue71](https://github.com/longcw/yolo2-pytorch/issues/71).
-
-**NOTE 3:**
-Upgrade to PyTorch 0.4: https://github.com/longcw/yolo2-pytorch/issues/59
+并且此处，我对yolo9000 做了些许的修改，和处理，方便中国的朋友使用yolo 在其他工程运用上  
 
 
 
-## Installation and demo
+## 安装和编译
 1. Clone this repository
-    ```bash
-    git clone git@github.com:longcw/yolo2-pytorch.git
-    ```
+    你可以拷贝我的yolo 从github 上  
 
-2. Build the reorg layer ([`tf.extract_image_patches`](https://www.tensorflow.org/api_docs/python/tf/extract_image_patches))
-    ```bash
-    cd yolo2-pytorch
-    ./make.sh
-    ```
-3. Download the trained model [yolo-voc.weights.h5](https://drive.google.com/open?id=0B4pXCfnYmG1WUUdtRHNnLWdaMEU) 
-and set the model path in `demo.py`
-4. Run demo `python demo.py`. 
+2. 进入yolo 主文件夹 bash make.sh  
 
 ## Training YOLOv2
-You can train YOLO2 on any dataset. Here we train it on VOC2007/2012.
+训练自己的yolov2
+这里你需要构建一个软连接到你下载的训练集，这里以voc2012 为例子进入data 文件夹  
 
-1. Download the training, validation, test data and VOCdevkit
-
+ln -s [源文件目录] VOCdevkit2012 以下给你提供了一些voc 的数据集
     ```bash
     wget http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCtrainval_06-Nov-2007.tar
     wget http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCtest_06-Nov-2007.tar
     wget http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCdevkit_08-Jun-2007.tar
     ```
-
-2. Extract all of these tars into one directory named `VOCdevkit`
-
-    ```bash
-    tar xvf VOCtrainval_06-Nov-2007.tar
-    tar xvf VOCtest_06-Nov-2007.tar
-    tar xvf VOCdevkit_08-Jun-2007.tar
-    ```
-
-3. It should have this basic structure
-
-    ```bash
-    $VOCdevkit/                           # development kit
-    $VOCdevkit/VOCcode/                   # VOC utility code
-    $VOCdevkit/VOC2007                    # image sets, annotations, etc.
-    # ... and several other directories ...
-    ```
     
-4. Since the program loading the data in `yolo2-pytorch/data` by default,
-you can set the data path as following.
-    ```bash
-    cd yolo2-pytorch
-    mkdir data
-    cd data
-    ln -s $VOCdevkit VOCdevkit2007
-    ```
-    
-5. Download the [pretrained darknet19 model](https://drive.google.com/file/d/0B4pXCfnYmG1WRG52enNpcV80aDg/view?usp=sharing)
-and set the path in `yolo2-pytorch/cfgs/exps/darknet19_exp1.py`.
+3. 下载预训练模型[pretrained darknet19 model](https://drive.google.com/file/d/0B4pXCfnYmG1WRG52enNpcV80aDg/view?usp=sharing)
+and set the path in `yolo2-pytorch/cfgs/exps/darknet19_exp1.py`.  
+    特别注意这里下载下来的权重要放在model weights 里头，这个操作非常的简单 你只需要软连接的建立一个weights 文件夹在 model 里头即可  
 
-7. (optional) Training with TensorBoard.
-
-    To use the TensorBoard, 
-    set `use_tensorboard = True` in `yolo2-pytorch/cfgs/config.py`
-    and install TensorboardX (https://github.com/lanpa/tensorboard-pytorch).
-    Tensorboard log will be saved in `training/runs`.
+4. 训练
+    你可以在cfg 文件夹中修改所有的操作，包括训练的batch size ，你预先定义的prior，还有个数，学习率等等  
 
 
 6. Run the training program: `python train.py`.
 
 
-## Evaluation
+## 测试
+在测试过程中你可以修改test.py 中的几个函数，其中一个是glob.glob(*)你所存放的测试图片名，里头存放了你要测试的所有图片  
+另外你还可以在dataTransform.xmlWrite里头写入你要存放的xml结果位置  
+最后通过我们的小工具./linux_v1.4.0/labelImg 来导入图片于xml 来可视化你的结果  
 
-Set the path of the `trained_model` in `yolo2-pytorch/cfgs/config.py`.
-```bash
-cd faster_rcnn_pytorch
-mkdir output
-python test.py
-```
-## Training on your own data
 
-The forward pass requires that you supply 4 arguments to the network:
 
-- `im_data` - image data.  
-  - This should be in the format `C x H x W`, where `C` corresponds to the color channels of the image and `H` and `W` are the height and width respectively.  
-  - Color channels should be in RGB format.  
-  - Use the `imcv2_recolor` function provided in `utils/im_transform.py` to preprocess your image.  Also, make sure that images have been resized to `416 x 416` pixels
-- `gt_boxes` - A list of `numpy` arrays, where each one is of size `N x 4`, where `N` is the number of features in the image.  The four values in each row should correspond to `x_bottom_left`, `y_bottom_left`, `x_top_right`, and `y_top_right`.  
-- `gt_classes` - A list of `numpy` arrays, where each array contains an integer value corresponding to the class of each bounding box provided in `gt_boxes`
-- `dontcare` - a list of lists
-
-License: MIT license (MIT)
+License: HIT license (HIT)
