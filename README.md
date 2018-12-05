@@ -30,22 +30,22 @@ and the [paper](https://arxiv.org/abs/1612.08242):
 这里你需要构建一个软连接到你下载的训练集，这里以voc2012 为例子进入data 文件夹  
 
 ln -s [源文件目录] VOCdevkit2012  
-以下给你提供了一些voc 的数据集：
+以下给你提供了一些voc 的数据集：  
     ```bash
     wget http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCtrainval_06-Nov-2007.tar
     wget http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCtest_06-Nov-2007.tar
     wget http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCdevkit_08-Jun-2007.tar
     ```
     
-3. 下载预训练模型[pretrained darknet19 model](https://drive.google.com/file/d/0B4pXCfnYmG1WRG52enNpcV80aDg/view?usp=sharing)
+1. 下载预训练模型[pretrained darknet19 model](https://drive.google.com/file/d/0B4pXCfnYmG1WRG52enNpcV80aDg/view?usp=sharing)
 and set the path in `yolo2-pytorch/cfgs/exps/darknet19_exp1.py`.  
     特别注意这里下载下来的权重要放在model weights 里头，这个操作非常的简单 你只需要软连接的建立一个weights 文件夹在 model 里头即可  
 
-4. 训练
+2. 训练
     你可以在cfg 文件夹中修改所有的操作，包括训练的batch size ，你预先定义的prior，还有个数，学习率等等  
 
 
-6. Run the training program: `python train.py`.
+3. Run the training program: `python train.py`.
 
 
 ## 测试
