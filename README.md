@@ -14,7 +14,8 @@ For details about YOLO and YOLOv2 please refer to their [project page](https://p
 and the [paper](https://arxiv.org/abs/1612.08242):
 *YOLO9000: Better, Faster, Stronger by Joseph Redmon and Ali Farhadi*.
 
-并且此处，我对yolo9000 做了些许的修改，和处理，方便中国的朋友使用yolo 在其他工程运用上  
+并且此处，我对yolo9000 做了些许的修改和中文注释，方便中国和世界的朋友使用yolo在其他工程运用上  
+本人的理解有限，如果有什么不对的地方，欢迎批评指正  
 
 
 
